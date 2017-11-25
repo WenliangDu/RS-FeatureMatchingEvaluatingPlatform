@@ -4,4 +4,4 @@ Faculty of Information and Technology, Macau University of Science and Technolog
 Last Modified October 2017/11/25
 
 The main program is Simulation_all_alpha1_2.m
-1. Add mean shif factor
+1. Add mean shift factor
