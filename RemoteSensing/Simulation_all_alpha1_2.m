@@ -21,6 +21,11 @@ Simulation_all_alpha1
 Simulation_all_alpha1_1
 1. For uploading to Github
 
+2017/11/23
+Simulation_all_alpha1_2
+1. Add MeanFactor
+2. Simulation_FalseInliers_alpha1_3 => Simulation_FalseInliers_alpha1_4
+
 Copyright (c) 2017 by Wenliang Du (du_wenliang@qq.com), 
 Faculty of Information and Technolgy, Macau University of Science and Technology
 Last Modified October 2017/9/27
@@ -38,12 +43,13 @@ close all;
 Target = 1; % 1: LROC; 2. HiRISE
 DeltaSlewAngle = 15; % difference of slewing angles of two remoters
 DeltaEmissionAngle = 30; % difference of emission angles of two remoters
-FeaturesNum = 6000; % initial number of feature-points in the coverage of world plane
+FeaturesNum = 1000; % initial number of feature-points in the coverage of world plane
 OffsetRadius = 1000; % offset of central nadir points of two remoters. (meters)
 SlewAngleRange = 15; % maximum slewing angle
 EmissionAngleRange = 30; % maximum emission angle
-Ratio = 0.1; % outliers ratio
+Ratio = 0.5; % outliers ratio
 DistributionFactor = 1; % ratio of the distance to farthest neigbour (0~1)
+MeanFactor = -5; % Shift factor of mean value of Gaussian distribution. (-5:1:0)
 %% Initial parameters of simulating terrain
 Initial_Elevation = 2000;
 Initial_Roughness = 2000;
@@ -72,8 +78,8 @@ surf(xm, ym, hm);
 title('Simulated terrain');
 %% Simulate outliers (false correspondences)
 [FeaturesCoordinatesA_S,FeaturesCoordinatesB_S,FeaturesCoordinatesA_R,FeaturesCoordinatesB_R,SamplingOrder_S] = Simulation_RandomSampling_alpha1(FeaturesImagePlaneCoordinatesL_Qualified,FeaturesImagePlaneCoordinatesR_Qualified,SamplingNum);
-FeaturesCoordinates_Qualified_S = FeaturesCoordinates_Qualified(SamplingOrder_S,1:2);
-[FeaturesCoordinatesA_NewReOrdered,FeaturesCoordinatesB_NewReOrdered,TrueInliers,TrueOutiers,indexPairs,SamplingOrder_R] = Simulation_FalseInliers_alpha1_3(FeaturesCoordinates_Qualified_S,FeaturesCoordinatesA_S,FeaturesCoordinatesB_S,Ratio,FeaturesCoordinatesA_R,FeaturesCoordinatesB_R,DistributionFactor);
+FeaturesCoordinates_Qualified_S = FeaturesCoordinates_Qualified(SamplingOrder_S,1:2); % Re-order the feature-points randomly to avoid the influence of order
+[FeaturesCoordinatesA_NewReOrdered,FeaturesCoordinatesB_NewReOrdered,TrueInliers,TrueOutiers,indexPairs,SamplingOrder_R] = Simulation_FalseInliers_alpha1_4(FeaturesCoordinates_Qualified_S,FeaturesCoordinatesA_S,FeaturesCoordinatesB_S,Ratio,FeaturesCoordinatesA_R,FeaturesCoordinatesB_R,DistributionFactor,MeanFactor);
 
 figure,
 plot(FeaturesCoordinatesA_NewReOrdered(:,1),FeaturesCoordinatesA_NewReOrdered(:,2),'ro');hold on
